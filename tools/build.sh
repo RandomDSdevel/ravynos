@@ -1,9 +1,13 @@
 #!/usr/bin/env zsh
 SRCROOT=${CIRRUS_WORKING_DIR:-$PWD}
 PLATFORM=${PLATFORM:-$(uname -m).$(uname -p)}
-OSNAME=$(uname -o)
+OSNAME=$(uname -s)
 PREFIX=${PREFIX:-/usr}
-HW_CPUS=$(sysctl -n hw.ncpu)
+if [ "x${OSNAME}" = "xLinux" ]; then
+    HW_CPUS=$(grep -c ^processor /proc/cpuinfo)
+else
+    HW_CPUS=$(sysctl -n hw.ncpu)
+fi
 CORES=${CORES:-${HW_CPUS}}
 BUILDROOT=/usr/obj/${SRCROOT}/${PLATFORM}
 TMPBIN=${BUILDROOT}/tmp/usr/bin
@@ -139,6 +143,7 @@ set_options() {
         fi
     fi
     echo ":: ravynOS Build Tool [Prefix ${PREFIX} Cores ${CORES} Platform ${PLATFORM}]"
+    echo ":: Host OS [${OSNAME}]"
     logdate "Starting"
 }
 

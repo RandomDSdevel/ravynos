@@ -51,7 +51,6 @@ else()
     )
 endif()
 
-
 # Bootstrap our SDK if needed
 add_subdirectory(Developer)
 
